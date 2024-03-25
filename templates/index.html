@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BigQuery Data Display</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>BigQuery Data Display</h1>
+    <div class="container">
+        <div id="top-time-slots">
+            <h2>Top Time Slots</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Time Reference</th>
+                        <th>Trade Value</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <div id="top-trade-deficits">
+            <h2>Top Trade Deficits</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Country Label</th>
+                        <th>Trade Deficit Value</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <div id="top-trade-surpluses">
+            <h2>Top Trade Surpluses</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Service Code</th>
+                        <th>Trade Surplus</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Fetch top time slots
+            $.getJSON('/top-time-slots', function(data) {
+                var tableBody = $('#top-time-slots tbody');
+                data.forEach(item => {
+                    var row = `<tr><td>${item.time_ref}</td><td>${item.trade_value}</td></tr>`;
+                    tableBody.append(row);
+                });
+            });
+
+            // Fetch top trade deficits
+            $.getJSON('/top-trade-deficits', function(data) {
+                var tableBody = $('#top-trade-deficits tbody');
+                data.forEach(item => {
+                    var row = `<tr><td>${item.country_label}</td><td>${item.trade_deficit_value}</td></tr>`;
+                    tableBody.append(row);
+                });
+            });
+
+            // Fetch top trade surpluses
+            $.getJSON('/top-trade-surpluses', function(data) {
+                var tableBody = $('#top-trade-surpluses tbody');
+                data.forEach(item => {
+                    var row = `<tr><td>${item.service_code}</td><td>${item.trade_surplus}</td></tr>`;
+                    tableBody.append(row);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
