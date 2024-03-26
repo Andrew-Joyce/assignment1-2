@@ -38,18 +38,19 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Service Code</th>
-                        <th>Trade Surplus</th>
+                        <th>Service Label</th>
+                        <th>Trade Surplus Value</th>
                     </tr>
                 </thead>
                 <tbody></tbody>
             </table>
         </div>
     </div>
+    <!-- Include jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Script tags properly closed, and Flask syntax corrected -->
     <script>
         $(document).ready(function() {
-            // Fetch top time slots
             $.getJSON('/top-time-slots', function(data) {
                 var tableBody = $('#top-time-slots tbody');
                 data.forEach(item => {
@@ -58,7 +59,6 @@
                 });
             });
 
-            // Fetch top trade deficits
             $.getJSON('/top-trade-deficits', function(data) {
                 var tableBody = $('#top-trade-deficits tbody');
                 data.forEach(item => {
@@ -67,11 +67,10 @@
                 });
             });
 
-            // Fetch top trade surpluses
-            $.getJSON('/top-trade-surpluses', function(data) {
+            $.getJSON('/top-trade-surplus-services', function(data) {
                 var tableBody = $('#top-trade-surpluses tbody');
                 data.forEach(item => {
-                    var row = `<tr><td>${item.service_code}</td><td>${item.trade_surplus}</td></tr>`;
+                    var row = `<tr><td>${item.service_label}</td><td>${item.trade_surplus_value}</td></tr>`;
                     tableBody.append(row);
                 });
             });
