@@ -1,9 +1,15 @@
+# Imports necessary modules including Flask for creating the web application and jsonify, render_template for handling requests and rendering templates.
+# Imports bigquery from google.cloud to interact with Google BigQuery.
 from flask import Flask, jsonify, render_template
 from google.cloud import bigquery
 
+# Initialises Flask app.
 app = Flask(__name__)
+
+# Creates a BigQuery client instance to interact with Google BigQuery.
 client = bigquery.Client(project='assignment1-2-418206', location='australia-southeast1')
 
+#Retrieves the top time slots based on trade value from data stored in the cloud.
 @app.route('/top-time-slots', methods=['GET'])
 def get_top_time_slots():
     QUERY = """
@@ -19,11 +25,13 @@ def get_top_time_slots():
     LIMIT 
         10;
     """
+    # Executes the query and retrieve results.
     query_job = client.query(QUERY)
     rows = query_job.result()
     results = [dict(row) for row in rows]
     return jsonify(results)
 
+# Retrieves the top trade deficits from data stored in the cloud.
 @app.route('/top-trade-deficits', methods=['GET'])
 def get_top_trade_deficits():
     QUERY = """
@@ -65,8 +73,10 @@ def get_top_trade_deficits():
             'status': row.status
         } for row in rows
     ]
+    # Returns the results as JSON.
     return jsonify(results)
 
+# Retrieves the top trade surplus services from the data stored in the cloud. 
 @app.route('/top-trade-surplus-services', methods=['GET'])
 def get_top_trade_surplus_services():
     QUERY = """
@@ -119,11 +129,13 @@ def get_top_trade_surplus_services():
     SELECT * FROM TradeSurplusServices;
     """
     try:
+        # Executes the query and retrieve results.
         query_job = client.query(QUERY)
         rows = query_job.result()
         results = [dict(row) for row in rows]
         return jsonify(results)
     except Exception as e:
+        # Handles exceptions and returns an error response.
         print(e)
         return jsonify({"error": str(e)}), 500
 
@@ -131,11 +143,13 @@ def get_top_trade_surplus_services():
 def index():
     return render_template('index.html')
 
+#Lists static files for debugging purposes.
 @app.route('/debug/static')
 def debug_static_files():
     import os
     files = os.listdir('static')
     return jsonify(files)
 
+# Runs the Flask app if the script is executed directly.
 if __name__ == '__main__':
     app.run(debug=True)
